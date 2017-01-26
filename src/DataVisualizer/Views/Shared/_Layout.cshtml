@@ -4,11 +4,15 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
 <body>
     <div>
         <h1>It Works!</h1>
         @RenderBody()
     </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    @RenderSection("scripts", required:false)
 </body>
 </html>

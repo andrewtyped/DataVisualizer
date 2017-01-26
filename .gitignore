@@ -250,3 +250,5 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+/src/DataVisualizer/Properties/PublishProfiles/publish-module.psm1
+/src/DataVisualizer/Properties/PublishProfiles/BargerDataVisualizer - Web Deploy-publish.ps1

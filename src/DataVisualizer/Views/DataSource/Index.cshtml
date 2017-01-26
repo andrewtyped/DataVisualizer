@@ -1,0 +1,109 @@
+﻿@using DataVisualizer.Models
+@model DataSourceRegistrationRequest
+
+<form asp-controller="DataSource" asp-action="RegisterDataSource" method="post" class="form-horizontal">
+    <h4>Register a New Data Source</h4>
+
+    <div asp-validation-summary="@ValidationSummary.All" class="text-danger"></div>
+
+    <h4>Data Source</h4>
+
+    <hr/>
+
+    <div class="form-group">
+        <label asp-for="Id" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Id" class="form-control" />
+            <span asp-validation-for="Id" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+
+    <h4>Visualization</h4>
+
+    <hr/>
+
+    <div class="form-group">
+        <label asp-for="Visualization.Type" class="col-md-2 control-label">Type</label>
+
+        <div class="col-md-10">
+            <select id="visualization-type" asp-for="Visualization.Type" class="form-control" asp-items="@(Html.GetEnumSelectList<VisualizationType>())">
+            </select>
+
+            <span asp-validation-for="Visualization.Type" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Visualization.Name" class="col-md-2 control-label">Name</label>
+        <div class="col-md-10">
+            <input asp-for="Visualization.Name" class="form-control"/>
+            <span asp-validation-for="Visualization.Name" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Visualization.Description" class="col-md-2 control-label">Name</label>
+        <div class="col-md-10">
+            <input asp-for="Visualization.Description" class="form-control" />
+            <span asp-validation-for="Visualization.Description" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div id="visualization-custom-properties">
+
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-default">Submit</button>
+        </div>
+    </div>
+
+    
+</form>
+
+@section scripts {
+
+}
+
+<script type="text/javascript">
+    const visualizationTypeSelect = document.querySelector('#visualization-type');
+    const visualizationPropertiesContainer = document.querySelector('#visualization-custom-properties');
+    const endpoint = '@Url.Action("GetVisualizationProperties", "DataSource")';
+
+    function renderVisualizationProperties(properties) {
+        const html = properties.map((property, index) => {
+            return `
+                <div class="form-group">
+                    <label for="Visualization.DataSourceToVisualizationPropertyMap[${property}]" class ="col-md-2 control-label">${property}</label>
+                    <div class="col-md-10">
+                        <input id="Visualization.DataSourceToVisualizationPropertyMap[${property}]" name="Visualization.DataSourceToVisualizationPropertyMap[${property}]" class ="form-control" />
+                    </div>
+                </div>
+                `;
+        
+        }).join('');
+
+        visualizationPropertiesContainer.innerHTML = html;
+    }
+
+    function getVisualizationProperties(e) {
+        const properties = [];
+        fetch(endpoint)
+            .then(blob => blob.json())
+            .then(data => properties.push(...data))
+            .then(data => renderVisualizationProperties(properties));
+    }
+
+    visualizationTypeSelect.addEventListener('change', getVisualizationProperties);
+
+    getVisualizationProperties();
+</script>
