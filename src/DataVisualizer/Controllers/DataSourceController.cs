@@ -129,6 +129,12 @@ namespace DataVisualizer.Controllers
 
             try
             {
+                //Reversing key an value on purpose. Need to do a reverse lookup.
+                var dataSourceVisualizationProperties = dataVisualizerContext.DataSourceVisualizationProperties
+                    .Where(property => property.DataSourceVisualization.Id == saveRecordRequest.DataSourceVisualizationId)
+                    .ToDictionary(property => property.Value, 
+                                  property => property.Key);
+
                 var record = new Record()
                 {
                     DataSource = dataVisualizerContext.DataSources
@@ -139,13 +145,18 @@ namespace DataVisualizer.Controllers
 
                     Properties = saveRecordRequest.Properties.Select(kvp => new RecordProperty()
                     {
-                        Key = kvp.Key,
+                        Key = dataSourceVisualizationProperties[kvp.Key],
                         Value = kvp.Value
                     }).ToList()
                 };
 
 
                 dataVisualizerContext.Records.Add(record);
+            }
+            catch(KeyNotFoundException ex)
+            {
+                //TODO: Informative error.
+                return new ObjectResult(false);
             }
             catch(Exception ex)
             {

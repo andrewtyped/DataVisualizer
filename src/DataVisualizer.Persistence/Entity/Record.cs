@@ -17,5 +17,7 @@ namespace DataVisualizer.Persistence.Entity
         public DataSourceVisualization DataSourceVisualization { get; set; }
 
         public ICollection<RecordProperty> Properties { get; set; }
+
+        public DateTime DateCreated { get; set; }
     }
 }
